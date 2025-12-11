@@ -1,0 +1,5 @@
+{
+  "name": "Hospital System Assistant",
+  "description": "A Gemini-powered agent orchestration system for hospital operations, demonstrating AIS principles and IT Governance routing logic.",
+  "requestFramePermissions": []
+}
