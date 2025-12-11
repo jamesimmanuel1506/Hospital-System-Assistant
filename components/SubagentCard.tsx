@@ -1,5 +1,5 @@
 import React from 'react';
-import { SubagentConfig, AgentId } from '../types.ts';
+import { SubagentConfig, AgentId } from '../types';
 import { FileText, Stethoscope, User, Calendar, Activity } from 'lucide-react';
 
 interface SubagentCardProps {

@@ -1,7 +1,14 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { RoutingResponse } from "../types.ts";
+import { RoutingResponse } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Helper to get AI instance safely
+const getAiClient = () => {
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+        throw new Error("API Key belum dikonfigurasi. Pastikan variabel lingkungan API_KEY telah diatur.");
+    }
+    return new GoogleGenAI({ apiKey });
+};
 
 const SYSTEM_INSTRUCTION = `
 Anda adalah 'Manajer Operasional Rumah Sakit' (Agen Induk) dalam sistem Informasi Rumah Sakit (SIMRS).
@@ -21,6 +28,7 @@ Berikan respons dalam format JSON yang berisi ID agen tujuan, alasan routing (re
 
 export const routeRequestToAgent = async (query: string): Promise<RoutingResponse> => {
     try {
+        const ai = getAiClient();
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: query,
@@ -54,12 +62,18 @@ export const routeRequestToAgent = async (query: string): Promise<RoutingRespons
             throw new Error("No response from AI");
         }
         return JSON.parse(text) as RoutingResponse;
-    } catch (error) {
+    } catch (error: any) {
         console.error("Routing Error:", error);
+        
+        let errorMessage = "Terjadi kesalahan sistem saat memproses permintaan.";
+        if (error.message.includes("API Key")) {
+            errorMessage = "Konfigurasi API Key hilang. Harap set API_KEY di environment variables.";
+        }
+
         return {
             agentId: "unknown",
-            reasoning: "Terjadi kesalahan sistem saat memproses permintaan.",
-            simulatedResponse: "Maaf, sistem sedang mengalami gangguan. Silakan coba lagi."
+            reasoning: errorMessage,
+            simulatedResponse: "Maaf, sistem sedang mengalami gangguan atau konfigurasi belum lengkap."
         };
     }
 };

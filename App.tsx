@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Network, Server, ArrowRight, ShieldCheck, Database, FileCheck } from 'lucide-react';
-import { routeRequestToAgent } from './services/geminiService.ts';
-import { AgentId, RoutingResponse, SubagentConfig } from './types.ts';
-import { SubagentCard } from './components/SubagentCard.tsx';
+import { routeRequestToAgent } from './services/geminiService';
+import { AgentId, RoutingResponse, SubagentConfig } from './types';
+import { SubagentCard } from './components/SubagentCard';
 
 const SUBAGENTS: SubagentConfig[] = [
     {
